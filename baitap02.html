@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài tập 02 - Form đăng ký</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav>
+    <a href="index.html">Trang chủ</a>
+    <a href="baitap01.html">Bài tập 01</a>
+    <a href="baitap02.html">Bài tập 02</a>
+    <a href="baitap03.html">Bài tập 03</a>
+</nav>
+
+<div class="container">
+    <div class="card">
+        <h2>📝 Form đăng ký</h2>
+
+        <form id="registerForm">
+            <input type="text" id="name" placeholder="Nhập họ tên">
+            <input type="email" id="email" placeholder="Nhập email">
+            <input type="password" id="password" placeholder="Nhập mật khẩu">
+
+            <label>
+                <input type="checkbox" id="agree">
+                Đồng ý điều khoản
+            </label>
+
+            <br><br>
+            <button type="submit">Đăng ký</button>
+        </form>
+
+        <p id="result"></p>
+    </div>
+
+    <div class="card">
+        <h2>💡 Giải thích logic tư duy</h2>
+        <p>
+            - Bắt sự kiện submit để kiểm tra dữ liệu trước khi gửi.<br>
+            - Validate email bằng regex.<br>
+            - Validate mật khẩu: ít nhất 8 ký tự, có chữ hoa, chữ thường, số.<br>
+            - Nếu hợp lệ thì lưu vào LocalStorage.<br>
+            - Bảo mật: không nên lưu mật khẩu thật vào LocalStorage (demo chỉ lưu dạng text).
+        </p>
+    </div>
+</div>
+
+<script>
+    document.getElementById("registerForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const agree = document.getElementById("agree").checked;
+
+        const result = document.getElementById("result");
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+        if (name === "" || email === "" || password === "") {
+            result.textContent = "❌ Vui lòng nhập đầy đủ thông tin!";
+            result.style.color = "red";
+            return;
+        }
+
+        if (!emailRegex.test(email)) {
+            result.textContent = "❌ Email không hợp lệ!";
+            result.style.color = "red";
+            return;
+        }
+
+        if (!passRegex.test(password)) {
+            result.textContent = "❌ Mật khẩu phải >= 8 ký tự và có chữ hoa, chữ thường, số!";
+            result.style.color = "red";
+            return;
+        }
+
+        if (!agree) {
+            result.textContent = "❌ Bạn phải đồng ý điều khoản!";
+            result.style.color = "red";
+            return;
+        }
+
+        const userData = { name, email };
+
+        localStorage.setItem("userData", JSON.stringify(userData));
+
+        result.textContent = "✅ Đăng ký thành công! Dữ liệu đã lưu vào LocalStorage.";
+        result.style.color = "green";
+    });
+</script>
+
+</body>
+</html>

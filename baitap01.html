@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài tập 01 - Tìm kiếm sản phẩm</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav>
+    <a href="index.html">Trang chủ</a>
+    <a href="baitap01.html">Bài tập 01</a>
+    <a href="baitap02.html">Bài tập 02</a>
+    <a href="baitap03.html">Bài tập 03</a>
+</nav>
+
+<div class="container">
+    <div class="card">
+        <h2>🛒 Danh sách sản phẩm</h2>
+
+        <input type="text" id="searchInput" placeholder="Nhập tên sản phẩm...">
+        <button onclick="searchProduct()">Tìm kiếm</button>
+
+        <p id="message"></p>
+
+        <div class="grid-products" id="productList"></div>
+    </div>
+
+    <div class="card">
+        <h2>💡 Giải thích logic tư duy</h2>
+        <p>
+            - Dữ liệu sản phẩm được lưu trong mảng JavaScript.<br>
+            - Khi người dùng nhập input, chương trình dùng toLowerCase() để tìm kiếm không phân biệt hoa thường.<br>
+            - Để tránh injection: không dùng innerHTML với dữ liệu người dùng nhập trực tiếp.<br>
+            - Tối ưu tìm kiếm: lọc mảng bằng filter() và hiển thị kết quả.
+        </p>
+    </div>
+</div>
+
+<script>
+    const products = [
+        { name: "Iphone 15 Pro", price: 30000000 },
+        { name: "Samsung S24 Ultra", price: 28000000 },
+        { name: "Laptop Dell Inspiron", price: 17000000 },
+        { name: "Tai nghe AirPods", price: 4500000 },
+        { name: "Chuột Logitech G102", price: 500000 }
+    ];
+
+    function renderProducts(list) {
+        const productList = document.getElementById("productList");
+        productList.innerHTML = "";
+
+        list.forEach(p => {
+            const div = document.createElement("div");
+            div.className = "product";
+            div.innerHTML = `<h3>${p.name}</h3><p>Giá: ${p.price.toLocaleString()} VNĐ</p>`;
+            productList.appendChild(div);
+        });
+    }
+
+    renderProducts(products);
+
+    function searchProduct() {
+        const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
+        const message = document.getElementById("message");
+
+        if (keyword === "") {
+            message.textContent = "⚠️ Vui lòng nhập tên sản phẩm!";
+            message.style.color = "red";
+            renderProducts(products);
+            return;
+        }
+
+        const result = products.filter(p => p.name.toLowerCase().includes(keyword));
+
+        if (result.length === 0) {
+            message.textContent = "❌ Không tìm thấy sản phẩm!";
+            message.style.color = "red";
+        } else {
+            message.textContent = `✅ Tìm thấy ${result.length} sản phẩm`;
+            message.style.color = "green";
+        }
+
+        renderProducts(result);
+    }
+</script>
+
+</body>
+</html>

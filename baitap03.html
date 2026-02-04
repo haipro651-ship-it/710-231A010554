@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài tập 03 - Countdown Timer</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav>
+    <a href="index.html">Trang chủ</a>
+    <a href="baitap01.html">Bài tập 01</a>
+    <a href="baitap02.html">Bài tập 02</a>
+    <a href="baitap03.html">Bài tập 03</a>
+</nav>
+
+<div class="container">
+    <div class="card">
+        <h2>⏳ Countdown Timer 10 phút</h2>
+        <h1 id="timer">10:00</h1>
+        <button onclick="resetTimer()">Reset</button>
+    </div>
+
+    <div class="card">
+        <h2>💡 Giải thích logic tư duy</h2>
+        <p>
+            - Dùng setInterval cập nhật mỗi 1 giây.<br>
+            - Khi timer về 0 thì clearInterval để tránh memory leak.<br>
+            - Dưới 1 phút thì thêm class warning để nhấp nháy cảnh báo.<br>
+            - Khi deploy hosting thì đồng hồ chạy theo thời gian máy client (không phải server).
+        </p>
+    </div>
+</div>
+
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <h2>⏰ Hết giờ!</h2>
+        <p>Bạn đã hết 10 phút.</p>
+        <button onclick="closeModal()">OK</button>
+    </div>
+</div>
+
+<script>
+    let totalSeconds = 10 * 60;
+    let interval = null;
+
+    function updateTimer() {
+        const timerElement = document.getElementById("timer");
+
+        let minutes = Math.floor(totalSeconds / 60);
+        let seconds = totalSeconds % 60;
+
+        timerElement.textContent =
+            String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
+
+        if (totalSeconds <= 60) {
+            timerElement.classList.add("warning");
+        } else {
+            timerElement.classList.remove("warning");
+        }
+
+        if (totalSeconds <= 0) {
+            clearInterval(interval);
+            showModal();
+            return;
+        }
+
+        totalSeconds--;
+    }
+
+    function startTimer() {
+        if (interval !== null) clearInterval(interval);
+        interval = setInterval(updateTimer, 1000);
+    }
+
+    function resetTimer() {
+        totalSeconds = 10 * 60;
+        startTimer();
+    }
+
+    function showModal() {
+        document.getElementById("modal").style.display = "flex";
+    }
+
+    function closeModal() {
+        document.getElementById("modal").style.display = "none";
+    }
+
+    startTimer();
+</script>
+
+</body>
+</html>
